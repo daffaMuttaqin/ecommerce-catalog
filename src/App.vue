@@ -1,49 +1,58 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      product: null,
+      currentIndex: 1,
+      isLoading: false, //Menambahkan properti loading
+    };
+  },
+  created() {
+    this.fetchProduct(this.currentIndex);
+  },
+  methods: {
+    async fetchProduct(index) {
+      this.isLoading = true; // Set loading menjadi true sebelum memanggil API
+      try {
+        const response = await axios.get(
+          `https://fakestoreapi.com/products/${index}`
+        );
+        this.product = response.data;
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      } finally {
+        this.isLoading = false; // Set loading menjadi false setelah API dipanggil
+      }
+    },
+    fetchNextProduct() {
+      this.currentIndex = this.currentIndex === 20 ? 1 : this.currentIndex + 1;
+      this.fetchProduct(this.currentIndex);
+    },
+  },
+};
 </script>
 
 <template>
   <div id="app">
-    <header>
-      <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-      <div class="wrapper">
-        <HelloWorld msg="You did it!" />
-      </div>
-    </header>
-
-    <main>
-      <TheWelcome />
-    </main>
+    <h1>Product Detail</h1>
+    <!-- Menampilkan pesan loading -->
+    <div v-if="isLoading">Loading...</div>
+    <!-- End Loading -->
+    <div v-else-if="product">
+      <h2>{{ product.title }}</h2>
+      <p>{{ product.description }}</p>
+      <p>{{ product.category }}</p>
+      <img :src="product.image" alt="" />
+      <p>Price: ${{ product.price }}</p>
+    </div>
+    <button @click="fetchNextProduct">Next</button>
   </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+img {
+  width: 50px;
 }
 </style>
