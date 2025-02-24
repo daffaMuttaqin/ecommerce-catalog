@@ -69,12 +69,38 @@ export default {
       <!-- Mengecek jika produk nya ada -->
       <div class="catalog" v-else-if="product">
         <div class="content">
-          <div>Category : {{ product.category }}</div>
-          <button @click="fetchNextProduct">Next</button>
+          <div class="product-image">
+            <img class="image" :src="product.image" alt="" />
+          </div>
+          <div class="detail-product">
+            <h1>{{ product.title }}</h1>
+            <div class="category">
+              <p>{{ product.category }}</p>
+              <p>{{ product.rating.rate }}/5</p>
+            </div>
+            <hr />
+
+            <p>{{ product.description }}</p>
+
+            <hr />
+
+            <!-- Price -->
+            <div>{{ product.price }}</div>
+
+            <!-- Button -->
+            <div>
+              <button>Buy now</button>
+              <button @click="fetchNextProduct">Next product</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="catalog" v-else>Produk tidak ada</div>
+      <div class="catalog" v-else>
+        <div class="content">
+          <button @click="fetchNextProduct">Next</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +110,11 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+}
+
+.image {
+  width: 301px;
+  height: 383px;
 }
 
 /* MEN SECTION */
@@ -105,6 +136,29 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+}
+
+.men-section .catalog .content .product-image {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.men-section .catalog .content .detail-product {
+  h1 {
+    color: #002772;
+  }
+  .category {
+    display: flex;
+  }
+  width: 70%;
+  height: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-right: 40px;
 }
 
 /* END MEN SECTION */
@@ -136,6 +190,21 @@ export default {
 .unavailable-section {
   background-color: #dcdcdc;
   height: 75%;
+}
+
+.unavailable-section .catalog {
+  height: 100%;
+}
+.unavailable-section .catalog .content {
+  height: 75%;
+  width: 75%;
+  background-color: white;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* END UNAVAILABLE SECTION */
