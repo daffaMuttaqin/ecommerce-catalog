@@ -30,8 +30,6 @@ export default {
         } else {
           this.product = null;
         }
-
-        console.log(this.product);
       } catch (error) {
         console.error("Error fetching product:", error);
       } finally {
@@ -53,6 +51,13 @@ export default {
         return "unavailable-section";
       }
     },
+    getCircleClass(index) {
+      const full = Math.floor(this.product.rating.rate);
+      const half = this.product.rating.rate % 1 >= 0.5 ? full + 1 : full;
+      if (index <= full) return "full";
+      if (index === half) return "half";
+      return "empty";
+    },
   },
 };
 </script>
@@ -73,24 +78,31 @@ export default {
             <img class="image" :src="product.image" alt="" />
           </div>
           <div class="detail-product">
-            <h1>{{ product.title }}</h1>
+            <h1 class="title">{{ product.title }}</h1>
             <div class="category">
               <p>{{ product.category }}</p>
-              <p>{{ product.rating.rate }}/5</p>
+              <div class="rating">
+                <span>{{ product.rating.rate }}/5</span>
+                <div class="circles">
+                  <div v-for="n in 5" :key="n" :class="getCircleClass(n)"></div>
+                </div>
+              </div>
             </div>
             <hr />
 
-            <p>{{ product.description }}</p>
+            <p class="description">{{ product.description }}</p>
 
             <hr />
 
             <!-- Price -->
-            <div>{{ product.price }}</div>
+            <div class="price">${{ product.price }}</div>
 
             <!-- Button -->
-            <div>
-              <button>Buy now</button>
-              <button @click="fetchNextProduct">Next product</button>
+            <div class="button">
+              <button class="btn-buy">Buy now</button>
+              <button class="btn-next" @click="fetchNextProduct">
+                Next product
+              </button>
             </div>
           </div>
         </div>
@@ -110,6 +122,7 @@ export default {
   height: 100%;
   width: 100%;
   position: relative;
+  font-family: "Inter";
 }
 
 .image {
@@ -140,7 +153,7 @@ export default {
 }
 
 .men-section .catalog .content .product-image {
-  width: 30%;
+  width: 40%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -148,17 +161,122 @@ export default {
 }
 
 .men-section .catalog .content .detail-product {
-  h1 {
+  width: 60%;
+  height: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  padding-right: 80px;
+
+  .title {
     color: #002772;
   }
   .category {
     display: flex;
+    color: #3f3f3f;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 21.78px;
+
+    .rating {
+      display: flex;
+      align-items: center;
+    }
+
+    .circles {
+      display: flex;
+      margin-left: 8px;
+    }
+
+    .circles div {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      margin-right: 4px;
+      border: 2px solid #002772;
+    }
+
+    .full {
+      background-color: #002772;
+    }
+
+    .half {
+      background: linear-gradient(to right, #002772 50%, transparent 50%);
+    }
+
+    .empty {
+      background-color: transparent;
+    }
   }
-  width: 70%;
-  height: 100%;
-  padding-top: 40px;
-  padding-bottom: 40px;
-  padding-right: 40px;
+
+  /* .rating {
+    display: flex;
+    p {
+      padding-right: 5px;
+    }
+    .fill {
+      width: 18px;
+      height: 18px;
+      margin-left: 1px;
+      border-radius: 9999px;
+      background-color: #002772;
+    }
+    .none {
+      width: 18px;
+      height: 18px;
+      margin-left: 1px;
+      border-radius: 9999px;
+      border-color: #002772;
+      border-width: 2px;
+      background-color: white;
+    }
+  } */
+  .description {
+    color: #1e1e1e;
+    padding-top: 20px;
+    height: 50%;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24.2px;
+  }
+  .price {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #002772;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 33.89px;
+  }
+  .button {
+    display: flex;
+    justify-content: space-between;
+
+    .btn-buy {
+      width: 270px;
+      height: 42px;
+      border-radius: 4px;
+      background-color: #002772;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24.2px;
+    }
+
+    .btn-next {
+      width: 270px;
+      height: 42px;
+      border-radius: 4px;
+      border-color: #002772;
+      border-width: 3px;
+      background-color: white;
+      color: #002772;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24.2px;
+    }
+  }
 }
 
 /* END MEN SECTION */
